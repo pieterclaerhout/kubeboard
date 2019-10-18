@@ -1,0 +1,25 @@
+{
+    "project": {
+        "name": "kubeboard",
+        "version": "1.0.0",
+        "description": "",
+        "package": "github.com/pieterclaerhout/kubeboard",
+        "main_package": "github.com/pieterclaerhout/kubeboard/cmd/kubeboard"
+    },
+    "build": {
+        "ouput_path": "build",
+        "ld_flags": [
+            "-s",
+            "-w"
+        ],
+        "extra_args": [
+            "-trimpath"
+        ]
+    },
+    "package": {
+        "include_readme": true
+    },
+    "test": {
+        "extra_args": []
+    }
+}
