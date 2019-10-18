@@ -1,15 +1,12 @@
 package main
 
-import(
-	"fmt"
-
-	"github.com/pieterclaerhout/kubeboard/versioninfo"
+import (
+	"github.com/pieterclaerhout/go-log"
+	"github.com/pieterclaerhout/kubeboard"
 )
 
 func main() {
-	fmt.Println("Project: "+ versioninfo.ProjectName)
-	fmt.Println("Description: "+ versioninfo.ProjectDescription)
-	fmt.Println("Version: "+ versioninfo.Version)
-	fmt.Println("Revision: " + versioninfo.Revision)
-	fmt.Println("Branch: " + versioninfo.Branch)
+	kb := kubeboard.NewKubeBoard()
+	err := kb.Start()
+	log.CheckError(err)
 }
