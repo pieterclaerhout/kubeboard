@@ -10,7 +10,11 @@ import (
 
 func main() {
 
+	file, _ := os.Create("/Users/pclaerhout/Desktop/kubectl.log")
+	defer file.Close()
+
 	kb := kubeboard.NewKubeBoard()
+	kb.File = file
 
 	go func() {
 
@@ -20,7 +24,7 @@ func main() {
 		s := <-c
 
 		// The signal is received, you can now do the cleanup
-		fmt.Println("Got signal:", s)
+		kb.File.WriteString("Got signal: " + fmt.Sprintf("%v", s) + "\n")
 		kb.Stop()
 
 	}()
