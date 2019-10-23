@@ -21,15 +21,26 @@ func (kb KubeBoard) Start() error {
 	return kb.startWebUI()
 }
 
+func (kb KubeBoard) Stop() {
+	kb.kubectlCmd.Process.Kill()
+
+}
+
 func (kb KubeBoard) startProxy() {
 
 	log.Info("Starting kubectl proxy")
 
-	kb.kubectlCmd = exec.Command("kubectl", "proxy", "--port=8001")
-	kb.kubectlCmd.Stdout = os.Stdout
-	kb.kubectlCmd.Stderr = os.Stderr
+	file, _ := os.Create("/Users/pclaerhout/Desktop/kubectl.log")
+	defer file.Close()
+
+	os.Setenv("PATH", os.Getenv("PATH")+":/usr/local/bin")
+	file.WriteString(os.Getenv("PATH") + "\n")
+
+	kb.kubectlCmd = exec.Command("/usr/local/bin/kubectl", "proxy", "--port=8001")
+	kb.kubectlCmd.Stdout = file
+	kb.kubectlCmd.Stderr = file
 	if err := kb.kubectlCmd.Start(); err != nil {
-		log.Fatalf("Failed to start kubectl proxy: %v", err)
+		file.WriteString(err.Error() + "\n")
 	}
 
 }
