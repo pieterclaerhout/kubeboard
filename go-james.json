@@ -12,6 +12,14 @@
             "-s",
             "-w"
         ],
+        "ld_flags_windows": [
+            "-s",
+            "-w",
+            "-H",
+            "windowsgui"
+        ],
+        "ld_flags_darwin": [],
+        "ld_flags_linux": [],
         "extra_args": [
             "-trimpath"
         ]

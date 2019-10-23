@@ -5,3 +5,5 @@
 A test with using [github.com/zserge/webview](github.com/zserge/webview) to launch `kubectl proxy` and then launch the correct URL to access the Kubernetes Dashboard.
 
 Rationale: because I always forget to start the proxy and I also can't remember the correct URL for the Kubernetes Dashboard.
+
+PS: this project uses [`go-james`](https://github.com/pieterclaerhout/go-james) for building and running.
