@@ -11,51 +11,46 @@ import (
 
 type KubeBoard struct {
 	kubectlCmd *exec.Cmd
-	File       *os.File
 }
 
-func NewKubeBoard() KubeBoard {
-	return KubeBoard{}
+func NewKubeBoard() *KubeBoard {
+	return &KubeBoard{}
 }
 
-func (kb KubeBoard) Start() error {
+func (kb *KubeBoard) Start() error {
 	go kb.startProxy()
 	kb.startWebUI()
 	return nil
 }
 
-func (kb KubeBoard) Stop() {
-	kb.File.WriteString("Closing down\n")
+func (kb *KubeBoard) Stop() {
+	log.Info("Closing down")
+	log.InfoDump(kb.kubectlCmd, "cmd")
 	if kb.kubectlCmd != nil && kb.kubectlCmd.Process != nil {
-		kb.File.WriteString("Killing subprocess")
+		log.Info("Killing subprocess")
 		kb.kubectlCmd.Process.Kill()
 	}
 }
 
-func (kb KubeBoard) startProxy() {
+func (kb *KubeBoard) startProxy() {
 
 	log.Info("Starting kubectl proxy")
 
-	// TODO: kill the previous instance if any
-
-	// file, _ := os.Create("/Users/pclaerhout/Desktop/kubectl.log")
-	// defer file.Close()
-
 	os.Setenv("PATH", os.Getenv("PATH")+":/usr/local/bin")
-	kb.File.WriteString(os.Getenv("PATH") + "\n")
+	log.Info(os.Getenv("PATH"))
 
 	kb.kubectlCmd = exec.Command("/usr/local/bin/kubectl", "proxy", "--port=8001")
-	kb.kubectlCmd.Stdout = kb.File
-	kb.kubectlCmd.Stderr = kb.File
+	kb.kubectlCmd.Stdout = log.Stdout
+	kb.kubectlCmd.Stderr = log.Stderr
 	kb.kubectlCmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	if err := kb.kubectlCmd.Start(); err != nil {
-		kb.File.WriteString(err.Error() + "\n")
+		log.Error(err)
 	}
 
 }
 
-func (kb KubeBoard) startWebUI() {
-	kb.File.WriteString("Starting web UI\n")
+func (kb *KubeBoard) startWebUI() {
+	log.Info("Starting web UI")
 
 	wv := webview.New(webview.Settings{
 		Title:     "kubeboard",
@@ -70,11 +65,4 @@ func (kb KubeBoard) startWebUI() {
 	}()
 	wv.Run()
 
-	// return webview.Open(
-	// 	"kubeboard",
-	// 	"http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login",
-	// 	1280,
-	// 	960,
-	// 	true,
-	// )
 }
