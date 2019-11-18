@@ -65,6 +65,15 @@
             ]
         },
         {
+            "label": "package",
+            "command": "go-james package",
+            "type": "shell",
+            "group": "build",
+            "problemMatcher": [
+                "$go"
+            ]
+        },
+        {
             "label": "run (debug)",
             "command": "DEBUG=1 go-james run",
             "type": "shell",
